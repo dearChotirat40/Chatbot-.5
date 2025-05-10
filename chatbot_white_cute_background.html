@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Chatbot ติวเตอร์ ม.5</title>
+  <style>
+    body { background-image: url('https://www.transparenttextures.com/patterns/white-wall-3.png'); background-color: #fffafc; }
+    body { font-family: Arial, sans-serif; text-align: center; margin: 50px; background: #ffe6f0; }
+    h1 { color: #d10072; border: 4px solid #ff66b2; padding: 15px 30px; border-radius: 15px; display: inline-block; }
+    input, button { padding: 10px; margin: 5px; width: 300px; border: none; border-radius: 5px; }
+    button { cursor: pointer; }
+    #answer { margin-top: 20px; font-weight: bold; color: #800040; }
+  </style>
+</head>
+<body>
+  <h1>🤖 Chatbot รายวิชาการออกแบบและเทคโนโลยี ม.5</h1>
+  <div style="margin-top: 20px;"><input type="text" id="question" placeholder="พิมพ์คำถามของคุณที่นี่..."></div><br>
+  <button style="background-color:#ff4d94; color:white;" onclick="getAnswer()">ถาม</button>
+  <button style="background-color:#aaa; color:black;" onclick="toggleSound()">🔊 เปิด/ปิดเสียง</button>
+  <button style="background-color:#66ccff; color:black;" onclick="randomQuestion()">🎲 สุ่มคำถาม</button>
+  <div id="answer"></div>
+  <div style="margin-top: 20px;">
+    <h3>💡 คำถามแนะนำ</h3>
+    <button onclick="fillQuestion('กระบวนการออกแบบคืออะไร')">กระบวนการออกแบบคืออะไร</button>
+    <button onclick="fillQuestion('ระบบเทคโนโลยีคืออะไร')">ระบบเทคโนโลยีคืออะไร</button>
+    <button onclick="fillQuestion('แนวคิด STEM คืออะไร')">แนวคิด STEM คืออะไร</button>
+  </div>
+  <h2>📝 สอนคำถามใหม่</h2>
+  <input type="text" id="newQuestion" placeholder="คำถามใหม่">
+  <input type="text" id="newAnswer" placeholder="คำตอบใหม่">
+  <button style="background-color:#66cc66; color:white;" onclick="teachBot()">สอนแชตบอท</button>
+  <div id="teachStatus"></div>
+
+  <script>
+    let knowledge = {
+      "กระบวนการออกแบบคืออะไร": "การวางแผนและแก้ปัญหาอย่างเป็นขั้นตอน",
+      "ระบบเทคโนโลยีคืออะไร": "ระบบที่ประกอบด้วย อินพุต กระบวนการ เอาต์พุต และการป้อนกลับ",
+      "แนวคิด STEM คืออะไร": "การบูรณาการ วิทยาศาสตร์ เทคโนโลยี วิศวกรรม และคณิตศาสตร์"
+    };
+    let soundOn = true;
+    function speak(text) {
+      if (!soundOn) return;
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = "th-TH";
+      window.speechSynthesis.speak(msg);
+    }
+    function toggleSound() {
+      soundOn = !soundOn;
+    }
+    function getAnswer() {
+      const q = document.getElementById("question").value.trim();
+      let reply = knowledge[q] || "ขอโทษค่ะ ยังไม่มีคำตอบสำหรับคำถามนี้ 😢";
+      document.getElementById("answer").innerText = reply;
+      speak(reply);
+    }
+    function randomQuestion() {
+      const keys = Object.keys(knowledge);
+      const randKey = keys[Math.floor(Math.random() * keys.length)];
+      document.getElementById("question").value = randKey;
+      getAnswer();
+    }
+    function teachBot() {
+      const q = document.getElementById("newQuestion").value.trim();
+      const a = document.getElementById("newAnswer").value.trim();
+      if (q && a) {
+        knowledge[q] = a;
+        document.getElementById("teachStatus").innerText = "✅ สอนสำเร็จ! ลองถามดูเลย";
+      } else {
+        document.getElementById("teachStatus").innerText = "⚠️ กรุณากรอกคำถามและคำตอบให้ครบ";
+      }
+    }
+    function fillQuestion(q) {
+      document.getElementById("question").value = q;
+    }
+  </script>
+</body>
+</html>
